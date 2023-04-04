@@ -1,5 +1,5 @@
 const express = require('express');
-const { graphqlHTTP } = require('express-graphql');
+const { ApolloServer } = require('apollo-server-express');
 const cors = require('cors');
 const colors = require('colors');
 const dotenv = require('dotenv');
@@ -19,11 +19,13 @@ app.use(cors());
 // Parse JSON body
 app.use(express.json());
 
-// GraphQL endpoint
-app.use('/graphql', graphqlHTTP({
-    schema,
-    graphiql: process.env.NODE_ENV === 'development',
-}));
+// Create Apollo Server instance
+const server = new ApolloServer({ schema });
+
+// Mount Apollo Server middleware
+server.applyMiddleware({ app, path: '/graphql' });
+
+
 
 // Test route
 app.get('/', (req, res) => {

@@ -14,11 +14,14 @@ const port = process.env.PORT || 5000;
 // Connect to database
 connectDB();
 
+// Parse JSON body
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 // Enable CORS
 app.use(cors());
 
-// Parse JSON body
-app.use(express.json());
+
 
 // Create Apollo Server instance
 // const server = new ApolloServer({ schema });

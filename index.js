@@ -5,6 +5,7 @@ const colors = require('colors');
 const dotenv = require('dotenv');
 const schema = require('./schema/schema');
 const connectDB = require('./config/db');
+const { graphqlHTTP } = require('express-graphql');
 
 dotenv.config();
 const app = express();
@@ -20,10 +21,19 @@ app.use(cors());
 app.use(express.json());
 
 // Create Apollo Server instance
-const server = new ApolloServer({ schema });
+// const server = new ApolloServer({ schema });
 
-// Mount Apollo Server middleware
-server.applyMiddleware({ app, path: '/graphql' });
+// // Mount Apollo Server middleware
+// server.applyMiddleware({ app, path: '/graphql' });
+
+
+app.use(
+    '/api/graphql',
+    graphqlHTTP({
+        schema,
+        graphiql: process.env.NODE_ENV === 'development',
+    })
+);
 
 
 

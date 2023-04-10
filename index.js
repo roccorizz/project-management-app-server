@@ -5,14 +5,24 @@ require('dotenv').config();
 const { graphqlHTTP } = require('express-graphql');
 const schema = require('./schema/schema');
 const connectDB = require('./config/db');
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 
 const app = express();
-
+// middle wares
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    next()
+})
+app.use(cors());
+app.get("/", (req, res) => {
+    res.json({ message: "project management server is running" })
+})
 // Connect to database
 connectDB();
 
-app.use(cors());
+
 
 app.use(
     '/graphql',
@@ -21,7 +31,7 @@ app.use(
         graphiql: process.env.NODE_ENV === 'development',
     })
 );
-app.get('/', (req, res) => {
-    res.send('Server is running');
+
+app.listen(port, () => {
+    console.log(`project management is running on ${port}`);
 })
-app.listen(port, console.log(`Server running on port ${port}`));
